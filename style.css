@@ -1,0 +1,1352 @@
+/* ========== 全局重置与变量 ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+}
+
+:root {
+    --search-radius: 18px;
+    --bg-main: #ffffff;
+    --input-border: #333333;
+    --input-focus: #4a6ae6;
+    --text-color: #333333;
+    --input-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    --input-focus-shadow: 0 0 12px rgba(74, 106, 230, 0.6);
+    --slider-light-blue: #4a6ae6;
+}
+
+/* ========== 基础页面 ========== */
+body, html {
+    overflow: hidden;
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+    height: 100%;
+    background-color: var(--bg-main);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ========== 搜索容器 ========== */
+.search-container {
+    position: absolute;
+    top: 250px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    z-index: 200;
+    width: 90%;
+    max-width: 600px;
+    transition: top 0.2s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%; 
+    height: 60px;
+    padding: 2px 16px;
+    border: 3px solid var(--input-border);
+    border-radius: var(--search-radius);
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px) brightness(1.2) saturate(1.8);
+    font-size: 20px;
+    line-height: 52px;
+    text-align: center;
+    outline: none;
+    color: var(--text-color);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: var(--input-shadow);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.search-input:focus {
+    border-color: var(--input-focus);
+    border-width: 3px;
+    box-shadow: var(--input-shadow), var(--input-focus-shadow);
+}
+
+/* ========== 搜索按钮 ========== */
+.search-btn {
+    position: absolute;
+    top: 95px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.1);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 25px;
+    padding: 13px 23px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.3s ease-out, opacity 0.2s, visibility 0.4s;
+    opacity: 0;
+    visibility: hidden;
+    font-size: 1rem;
+    font-weight: 500;
+    -webkit-tap-highlight-color: transparent;
+}
+.search-btn.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+}
+.search-btn:active {
+    transform: translateX(-50%) scale(0.8);
+}
+.search-btn-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+/* ========== 设置按钮 ========== */
+.show-modal {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    transition: transform 0.3s ease-out, opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: auto;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 25px;
+    padding: 13px 23px;
+    width: auto;
+    height: auto;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+    -webkit-tap-highlight-color: transparent;
+}
+.show-modal:active {
+    transform: translateX(-50%) scale(0.8);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+}
+.show-modal.hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: none;
+}
+.modal-btn-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    filter: none;
+}
+
+/* ========== 底部弹窗通用 ========== */
+.buttom-sheet {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: 0.1s linear;
+    z-index: 10000;
+    transform: translateZ(0);
+}
+.buttom-sheet.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+.buttom-sheet .sheet-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+    background: #000;
+}
+.buttom-sheet .content {
+    width: 100%;
+    position: relative;
+    background: #F2F3F5;
+    max-height: 100vh;
+    height: 60vh;
+    max-width: 1150px;
+    padding: 0 11px 30px;
+    transform: translateY(100%);
+    border-radius: 18px 18px 0 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transition: 0.3s ease;
+    will-change: transform;
+}
+.buttom-sheet.show .content {
+    transform: translateY(0);
+}
+.buttom-sheet.dragging .content {
+    transition: none;
+}
+.buttom-sheet.fullscreen .content {
+    border-radius: 0;
+    overflow-y: hidden;
+}
+.buttom-sheet .header {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+}
+.header .drag-icon {
+    cursor: grab;
+    user-select: none;
+    padding: 14px;
+    margin: 0px;
+}
+.header .drag-icon span {
+    height: 4px;
+    width: 66px;
+    display: block;
+    background: #919294;
+    border-radius: 50px;
+}
+.buttom-sheet .body {
+    height: 100%;
+    overflow-y: auto;
+    padding: 0 0 40px;
+    scrollbar-width: none;
+}
+.buttom-sheet .body::-webkit-scrollbar {
+    width: 0;
+}
+
+/* ========== 横屏/小屏适配 ========== */
+@media screen and (aspect-ratio > 1) and (max-height: 800px) {
+    .search-container {
+        top: 42px;
+    }
+    .search-input {
+        height: 60px;
+        line-height: 52px;
+        font-size: 20px;
+    }
+    .show-modal {
+        bottom: 10px;
+        padding: 8px;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* ========== 设置面板内容 ========== */
+.setting-section {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 16px 12px;
+    margin-bottom: 12px;
+    transition: margin-bottom 0.3s ease;
+    overflow: hidden;
+    box-shadow: none;
+}
+.setting-section:last-child {
+    margin-bottom: 0;
+}
+.setting-title {
+    font-size: 1rem;
+    color: #1E1E1E;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+.outside-title {
+    font-size: 0.85rem;
+    color: #606163;
+    margin-bottom: 8px;
+    margin-top: 0;
+    font-weight: 500;
+    padding-left: 12px;
+}
+.outside-title:nth-of-type(2) {
+    margin-top: 26px;
+}
+.outside-title:nth-of-type(3) {
+    margin-top: 26px;
+}
+.setting-section.no-padding {
+    padding: 3px 0;
+    overflow: hidden;
+}
+#searchBtnSection {
+    margin-top: 26px;
+}
+#searchSuggestionSection {
+    margin-top: 26px;
+}
+#shortcutTitle {
+    margin-top: 26px;
+}
+
+/* ========== 选项列表 ========== */
+.options-list {
+    background: transparent;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: none;
+}
+.option-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 12px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 1;
+}
+.option-item:active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 3px;
+    right: 3px;
+    bottom: 0;
+    background: #F0F0F0;
+    border-radius: 16px;
+    z-index: -1;
+}
+.option-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1E1E1E;
+}
+.option-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #ADADAD;
+    background: transparent;
+    transition: border 0.2s ease;
+}
+.option-item.selected .option-radio {
+    border: 5px solid #307af7;
+    background: transparent;
+}
+.option-divider {
+    height: 1px;
+    background: #E6E6E6;
+    margin: 0 12px;
+}
+
+/* ========== 时间选择器 ========== */
+.time-picker-wrapper {
+    display: block;
+    flex-direction: column;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease-out, opacity 0.2s ease 0.05s;
+    visibility: visible;
+}
+.time-picker-wrapper.show {
+    max-height: 150px;
+    opacity: 1;
+}
+.time-picker-wrapper::before {
+    content: "";
+    display: block;
+    height: 1px;
+    background: #E6E6E6;
+    margin: 0 12px;
+}
+.time-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+    padding: 12px 12px;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+.time-item:first-child::before {
+    content: "开始时间";
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1E1E1E;
+}
+.time-item:last-child::before {
+    content: "结束时间";
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1E1E1E;
+}
+.time-display {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #606163;
+    text-align: right;
+    line-height: 1.4;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    user-select: none;
+    pointer-events: none;
+    width: 50%;
+}
+.time-item input[type="time"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+.time-divider {
+    height: 1px;
+    background: #E6E6E6;
+    margin: 0 12px;
+    display: block;
+}
+
+/* ========== 开关 ========== */
+.toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.toggle-label {
+    font-size: 1rem;
+    color: #1E1E1E;
+    font-weight: 500;
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 39px;
+    height: 21px;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    outline: none;
+}
+.toggle-switch input:focus {
+    outline: none;
+    box-shadow: none;
+}
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #E6E6E6;
+    transition: 0.3s;
+    border-radius: 21px;
+}
+.toggle-slider::before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 2px;
+    bottom: 2px;
+    background: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+input:checked + .toggle-slider {
+    background-color: #4a6ae6;
+}
+input:checked + .toggle-slider::before {
+    transform: translateX(18px);
+}
+
+.outside-hint {
+    font-size: 0.85rem;
+    color: #606163;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    padding-left: 12px;
+    line-height: 1;
+}
+
+/* ========== 搜索建议列表 ========== */
+.suggestion-list {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    margin-bottom: 8px;
+    background: transparent;
+    list-style: none;
+    padding: 0;
+    z-index: 20;
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
+}
+.suggestion-list:not(.hide) li {
+    animation: fadeIn 0.25s ease forwards;
+}
+.suggestion-list.hide li {
+    animation: fadeOut 0.2s ease forwards;
+}
+.suggestion-list:not(.hide) li:nth-child(1) { animation-delay: 0s; }
+.suggestion-list:not(.hide) li:nth-child(2) { animation-delay: 0.04s; }
+.suggestion-list:not(.hide) li:nth-child(3) { animation-delay: 0.08s; }
+.suggestion-list:not(.hide) li:nth-child(4) { animation-delay: 0.12s; }
+.suggestion-list:not(.hide) li:nth-child(5) { animation-delay: 0.16s; }
+
+.suggestion-list li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #676767;
+    background: rgba(200, 200, 200, 0.3);
+    backdrop-filter: blur(20px) brightness(1.2) saturate(1.8);
+    border-radius: 18px;
+    opacity: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: manipulation;
+    transition: transform 0.15s ease;
+}
+.suggestion-list li:active {
+    transform: scale(0.96);
+    background: rgba(241, 241, 241, 0.8);
+}
+.suggestion-list li span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    padding-left: 4px;
+    transform: translateY(0.4px);
+}
+.suggestion-list li b {
+    font-weight: 600;
+    color: #2c2c2c;
+}
+.suggestion-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    flex-shrink: 0;
+    filter: none;
+    align-self: center;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* ========== 系统暗色模式 (auto) ========== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-main: #000000;
+        --input-border: #666666;
+        --input-focus: #4a6ae6;
+        --text-color: #f3f4f6;
+        --input-shadow: 0 4px 12px rgba(255, 255, 255, 0.08);
+        --input-focus-shadow: 0 0 12px rgba(74, 106, 230, 0.7);
+    }
+    .search-input:focus {
+        border-color: var(--input-focus);
+    }
+    .buttom-sheet .content {
+        background: #1a1a1a;
+        color: #f3f4f6;
+    }
+    .header .drag-icon span {
+        background: #919294;
+    }
+    .buttom-sheet .sheet-overlay {
+        opacity: 0.7;
+    }
+    .setting-section {
+        background: #2C2C2E;
+        border-radius: 16px;
+        box-shadow: none;
+    }
+    .setting-title {
+        color: #FFFFFF;
+    }
+    .outside-title {
+        color: #999999;
+    }
+    .options-list {
+        background: transparent;
+    }
+    .option-label {
+        color: #FFFFFF;
+    }
+    .option-radio {
+        border-color: #ADADAD;
+    }
+    .option-item.selected .option-radio {
+        border-color: #307af7;
+        background: transparent;
+    }
+    .option-divider {
+        background: #4A4A4C;
+    }
+    .option-item:active::before {
+        background: #5A5A5A;
+    }
+    .time-picker-wrapper::before {
+        background: #4A4A4C;
+    }
+    .time-item:first-child::before,
+    .time-item:last-child::before {
+        color: #FFFFFF;
+    }
+    .time-display {
+        color: #FFFFFF;
+    }
+    .time-divider {
+        background: #4A4A4C;
+    }
+    .toggle-label {
+        color: #FFFFFF;
+    }
+    .toggle-switch .toggle-slider {
+        background-color: #4a4a4a;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: #4a6ae6;
+    }
+    .toggle-switch .toggle-slider::before {
+        background-color: #ffffff;
+    }
+    .outside-hint {
+        color: #999999;
+    }
+
+    /* 系统暗色 - 搜索建议 */
+    .suggestion-list li {
+        color: #646464;
+        background: rgba(105, 105, 105, 0.3);
+    }
+    .suggestion-list li:active {
+        background: rgba(24, 24, 24, 0.8);
+    }
+    .suggestion-list li b {
+        color: #4a6ae6;
+    }
+    .suggestion-icon {
+        filter: brightness(0) invert(1);
+    }
+
+    /* 系统暗色 - 搜索按钮 */
+    .search-btn {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+    }
+    .search-btn-img {
+        filter: brightness(0);
+    }
+
+    /* 系统暗色 - 设置按钮 */
+    .show-modal {
+        background: rgba(84, 84, 84, 0.5);
+        backdrop-filter: blur(5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .show-modal:active {
+        background: rgba(84, 84, 84, 0.5);
+        backdrop-filter: blur(5px);
+    }
+    .modal-btn-img {
+        filter: brightness(0) invert(1);
+    }
+
+    /* 系统暗色 - 壁纸 */
+    .wallpaper-arrow {
+        opacity: 1;
+        filter: brightness(0) saturate(100%) invert(68%);
+    }
+    .wallpaper-divider {
+        background: #4A4A4C;
+    }
+
+    /* 系统暗色 - 删除数据按钮 */
+    #clearAllCacheBtn {
+        background: #4a4a4a;
+    }
+    #clearAllCacheBtn:active {
+        background: #5A5A5C;
+    }
+
+    /* 系统暗色 - 删除确认文字 */
+    #clearConfirmText {
+        color: #FFFFFF !important;
+    }
+}
+
+/* ========== 手动暗色模式 (html.dark-mode-manual) ========== */
+html.dark-mode-manual {
+    --bg-main: #000000;
+    --input-border: #666666;
+    --input-focus: #4a6ae6;
+    --text-color: #f3f4f6;
+    --input-shadow: 0 4px 12px rgba(255, 255, 255, 0.08);
+    --input-focus-shadow: 0 0 12px rgba(74, 106, 230, 0.7);
+}
+html.dark-mode-manual body {
+    background-color: var(--bg-main);
+}
+html.dark-mode-manual .search-input {
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(20px) brightness(1.2) saturate(1.8) !important;
+    color: var(--text-color);
+    border-color: var(--input-border);
+}
+html.dark-mode-manual .search-input:focus {
+    border-color: var(--input-focus);
+}
+html.dark-mode-manual .buttom-sheet .content {
+    background: #1a1a1a;
+    color: #f3f4f6;
+}
+html.dark-mode-manual .header .drag-icon span {
+    background: #919294;
+}
+html.dark-mode-manual .buttom-sheet .sheet-overlay {
+    opacity: 0.7;
+}
+html.dark-mode-manual .setting-section {
+    background: #2C2C2E;
+    border-radius: 16px;
+    box-shadow: none;
+}
+html.dark-mode-manual .setting-title {
+    color: #FFFFFF;
+}
+html.dark-mode-manual .outside-title {
+    color: #999999;
+}
+html.dark-mode-manual .options-list {
+    background: transparent;
+}
+html.dark-mode-manual .option-label {
+    color: #FFFFFF;
+}
+html.dark-mode-manual .option-radio {
+    border-color: #ADADAD;
+}
+html.dark-mode-manual .option-item.selected .option-radio {
+    border-color: #307af7;
+    background: transparent;
+}
+html.dark-mode-manual .option-divider {
+    background: #4A4A4C;
+}
+html.dark-mode-manual .option-item:active::before {
+    background: #5A5A5A;
+}
+html.dark-mode-manual .time-picker-wrapper::before {
+    background: #4A4A4C;
+}
+html.dark-mode-manual .time-item:first-child::before,
+html.dark-mode-manual .time-item:last-child::before {
+    color: #FFFFFF;
+}
+html.dark-mode-manual .time-display {
+    color: #FFFFFF;
+}
+html.dark-mode-manual .time-divider {
+    background: #4A4A4C;
+}
+html.dark-mode-manual .toggle-label {
+    color: #FFFFFF;
+}
+html.dark-mode-manual .toggle-switch .toggle-slider {
+    background-color: #4a4a4a;
+}
+html.dark-mode-manual .toggle-switch input:checked + .toggle-slider {
+    background-color: #4a6ae6;
+}
+html.dark-mode-manual .toggle-switch .toggle-slider::before {
+    background-color: #ffffff;
+}
+html.dark-mode-manual .outside-hint {
+    color: #999999;
+}
+
+/* 手动暗色 - 搜索建议 */
+html.dark-mode-manual .suggestion-list li {
+    color: #646464;
+    background: rgba(105, 105, 105, 0.3);
+}
+html.dark-mode-manual .suggestion-list li:active {
+    background: rgba(24, 24, 24, 0.8);
+}
+html.dark-mode-manual .suggestion-list li b {
+    color: #ffffff;
+}
+html.dark-mode-manual .suggestion-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* 手动暗色 - 搜索按钮 */
+html.dark-mode-manual .search-btn {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+}
+html.dark-mode-manual .search-btn-img {
+    filter: brightness(0);
+}
+
+/* 手动暗色 - 设置按钮 */
+html.dark-mode-manual .show-modal {
+    background: rgba(84, 84, 84, 0.5);
+    backdrop-filter: blur(5px);
+}
+html.dark-mode-manual .show-modal:active {
+    background: rgba(84, 84, 84, 0.5);
+    backdrop-filter: blur(5px);
+}
+html.dark-mode-manual .modal-btn-img {
+    filter: brightness(0) invert(1);
+}
+
+/* 手动暗色 - 壁纸 */
+html.dark-mode-manual .wallpaper-arrow {
+    opacity: 1;
+    filter: brightness(0) saturate(100%) invert(68%);
+}
+html.dark-mode-manual .wallpaper-divider {
+    background: #4A4A4C;
+}
+
+/* 手动暗色 - 删除数据按钮 */
+html.dark-mode-manual #clearAllCacheBtn {
+    background: #4a4a4a;
+}
+html.dark-mode-manual #clearAllCacheBtn:active {
+    background: #5A5A5C;
+}
+
+/* 手动暗色 - 删除确认文字 */
+html.dark-mode-manual #clearConfirmText {
+    color: #FFFFFF !important;
+}
+
+/* ========== 快速便签区域 ========== */
+.shortcut-area {
+    position: absolute;
+    top: 326px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    width: 95%;
+    max-width: 600px;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+.shortcut-area.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 12px;
+    row-gap: 22px;
+    padding: 0 9px;
+    transition: row-gap 0.3s ease;
+}
+
+.shortcut-item {
+    aspect-ratio: 1 / 1;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px) brightness(1.2);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: transform 0.15s ease;
+    width: 90%;
+    margin: 0 auto;
+    position: relative;
+}
+.shortcut-item:active {
+    transform: scale(0.92);
+}
+.shortcut-item .shortcut-icon {
+    width: 74%;
+    height: 74%;
+    object-fit: contain;
+    margin-bottom: 0;
+    border-radius: inherit;
+    transition: width 0.25s ease, height 0.25s ease, border-radius 0.25s ease;
+    pointer-events: none;
+}
+.shortcut-item .shortcut-name {
+    display: none;
+    position: absolute;
+    bottom: -19px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    max-width: 100%;
+    pointer-events: none;
+}
+.shortcut-item.add-btn .shortcut-icon {
+    opacity: 1;
+    filter: brightness(0) saturate(100%) invert(30%);
+}
+
+/* ========== 快捷弹窗头部 ========== */
+.shortcut-sheet .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 2px 8px;
+}
+.shortcut-sheet .drag-icon {
+    display: none;
+}
+.shortcut-sheet-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1E1E1E;
+    position: relative;
+    top: 1px;
+}
+.shortcut-close {
+    position: static;
+    width: 32px;
+    height: 32px;
+    background: rgba(94, 94, 94, 0.178);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.2s ease;
+}
+.shortcut-close:active {
+    transform: scale(0.88);
+}
+.shortcut-close img {
+    width: 24px;
+    height: 24px;
+    opacity: 0.7;
+}
+
+/* ========== 图标选择器 ========== */
+.shortcut-icon-picker {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 28px 0;
+}
+.shortcut-icon-btn {
+    width: 72px;
+    height: 72px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease;
+    overflow: hidden;
+}
+.shortcut-icon-btn:active {
+    transform: scale(0.92);
+}
+.shortcut-icon-btn img {
+    width: 55%;
+    height: 55%;
+    object-fit: contain;
+    pointer-events: none;
+    border-radius: inherit;
+}
+.shortcut-icon-btn img:not(.custom-preview) {
+    filter: brightness(0) saturate(100%) opacity(0.5);
+}
+
+/* ========== 弹窗内输入框 ========== */
+.shortcut-sheet .body input[type="text"] {
+    display: block;
+    width: 100%;
+    height: 40px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 22px;
+    background: rgba(128, 128, 128, 0.15);
+    box-shadow: none;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.shortcut-sheet .body input[type="text"]::placeholder {
+    color: #999;
+}
+
+/* ========== 添加/编辑/自定义 确认按钮 ========== */
+#shortcutAddConfirm,
+#editSaveConfirm,
+#customSearchConfirm {
+    display: block;
+    width: 40%;
+    height: 38px;
+    border: none;
+    border-radius: 22px;
+    background: #4a6ae6;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 36px auto 0;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+#shortcutAddConfirm:active,
+#editSaveConfirm:active,
+#customSearchConfirm:active {
+    background: #3a56c6;
+}
+
+/* ========== 编辑弹窗删除按钮图标 ========== */
+#editClose img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) saturate(100%) invert(16%) sepia(100%) saturate(7444%) hue-rotate(1deg) brightness(96%) contrast(114%);
+}
+
+/* ========== 自定义引擎说明文字 ========== */
+.custom-search-hint {
+    font-size: 0.8rem;
+    color: #606163;
+    margin: 0 0 16px 0;
+    padding: 0 4px;
+    line-height: 1.5;
+    text-align: left;
+}
+
+/* ========== 快速便签子开关动画容器 ========== */
+.shortcut-extra-wrapper {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease-out, opacity 0.2s ease 0.05s;
+}
+.shortcut-extra-wrapper.show {
+    max-height: 200px;
+    opacity: 1;
+}
+
+/* ========== 首字显示（替代默认图标） ========== */
+.shortcut-item .shortcut-letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 180%;
+    font-weight: 700;
+    color: #333;
+    background: transparent;
+    border-radius: 0;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* ========== 长按编辑遮罩 ========== */
+.shortcut-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(128, 128, 128, 0.5);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 2;
+}
+.shortcut-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+.shortcut-overlay img {
+    width: 28px;
+    height: 28px;
+    filter: brightness(0) invert(1);
+    user-select: none;
+    pointer-events: none;
+}
+
+/* ========== 暗色模式：快速便签 ========== */
+/* 系统暗色 */
+@media (prefers-color-scheme: dark) {
+    .shortcut-item {
+        background: rgba(108, 108, 108, 0.3);
+        backdrop-filter: blur(20px) brightness(1.2);
+        box-shadow: none;
+        overflow: hidden;
+    }
+    .shortcut-item .shortcut-name {
+        color: #f3f4f6;
+    }
+    .shortcut-close {
+        background: rgba(255, 255, 255, 0.15);
+    }
+    .shortcut-close img {
+        filter: brightness(0) invert(1);
+    }
+    .shortcut-sheet-title {
+        color: #fff;
+    }
+    .shortcut-icon-btn {
+        background: #2C2C2E;
+        box-shadow: none;
+    }
+    .shortcut-icon-btn img:not(.custom-preview) {
+        filter: brightness(0) invert(1) opacity(0.5);
+    }
+    .shortcut-sheet .body input[type="text"] {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+    .shortcut-sheet .body input[type="text"]::placeholder {
+        color: #888;
+    }
+    #shortcutAddConfirm,
+    #editSaveConfirm,
+    #customSearchConfirm {
+        background: #4a6ae6;
+    }
+    #shortcutAddConfirm:active,
+    #editSaveConfirm:active,
+    #customSearchConfirm:active {
+        background: #3a56c6;
+    }
+    .shortcut-item .shortcut-letter {
+        color: #f3f4f6;
+    }
+}
+
+/* 手动暗色 */
+html.dark-mode-manual .shortcut-item {
+    background: rgba(108, 108, 108, 0.3);
+    backdrop-filter: blur(20px) brightness(1.2);
+    box-shadow: none;
+    overflow: hidden;
+}
+html.dark-mode-manual .shortcut-item .shortcut-name {
+    color: #f3f4f6;
+}
+html.dark-mode-manual .shortcut-close {
+    background: rgba(255, 255, 255, 0.15);
+}
+html.dark-mode-manual .shortcut-close img {
+    filter: brightness(0) invert(1);
+}
+html.dark-mode-manual .shortcut-sheet-title {
+    color: #fff;
+}
+html.dark-mode-manual .shortcut-icon-btn {
+    background: #2C2C2E;
+    box-shadow: none;
+}
+html.dark-mode-manual .shortcut-icon-btn img:not(.custom-preview) {
+    filter: brightness(0) invert(1) opacity(0.5);
+}
+html.dark-mode-manual .shortcut-sheet .body input[type="text"] {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+html.dark-mode-manual .shortcut-sheet .body input[type="text"]::placeholder {
+    color: #888;
+}
+html.dark-mode-manual #shortcutAddConfirm,
+html.dark-mode-manual #editSaveConfirm,
+html.dark-mode-manual #customSearchConfirm {
+    background: #4a6ae6;
+}
+html.dark-mode-manual #shortcutAddConfirm:active,
+html.dark-mode-manual #editSaveConfirm:active,
+html.dark-mode-manual #customSearchConfirm:active {
+    background: #3a56c6;
+}
+html.dark-mode-manual .shortcut-item .shortcut-letter {
+    color: #f3f4f6;
+}
+
+/* ========== 壁纸相关 ========== */
+.wallpaper-arrow {
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+    flex-shrink: 0;
+    margin-right: -3px;
+    filter: brightness(0) saturate(100%) invert(68%);
+}
+#wallpaperSection {
+    position: relative;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    overflow: visible;
+}
+#wallpaperSection:active::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    background: #F0F0F0;
+    border-radius: 14px;
+    z-index: 0;
+    pointer-events: none;
+}
+#wallpaperSection .toggle-label,
+#wallpaperSection .wallpaper-arrow {
+    position: relative;
+    z-index: 1;
+}
+
+.wallpaper-delete {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    cursor: pointer;
+    filter: brightness(0) saturate(100%) invert(16%) sepia(100%) saturate(7444%) hue-rotate(1deg) brightness(96%) contrast(114%);
+    transform: translateX(-4px);
+}
+.wallpaper-divider {
+    display: none;
+    width: 1.2px;
+    height: 30px;
+    background: #E6E6E6;
+    margin: -20px 0;
+    margin-right: 2px;
+    flex-shrink: 0;
+}
+.wallpaper-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: -2px;
+}
+
+/* 壁纸暗色（通用） */
+@media (prefers-color-scheme: dark) {
+    #wallpaperSection:active::before {
+        background: #5A5A5A;
+    }
+}
+html.dark-mode-manual #wallpaperSection:active::before {
+    background: #5A5A5A;
+}
+
+/* ========== 其他杂项 ========== */
+#disableMoveEffectSection {
+    margin-top: 26px;
+}
+#engineOptions .option-divider:last-of-type {
+    display: none;
+}
+#personalizeTitle,
+#otherTitle {
+    margin-top: 26px;
+}
+#hideSettingsBtnSection {
+    margin-top: 26px;
+}
+
+/* ========== 删除确认弹窗按钮 ========== */
+#clearConfirmBtn {
+    display: block;
+    width: 40%;
+    height: 38px;
+    border: none;
+    border-radius: 22px;
+    background: #e74c3c;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 64px auto 0;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+#clearConfirmBtn:active {
+    background: #c0392b;
+}
+
+/* ========== 删除数据按钮（设置页） ========== */
+#clearAllCacheBtn {
+    width: 40%;
+    height: 38px;
+    border: none;
+    border-radius: 22px;
+    background: #E6E6E6;
+    color: #e74c3c;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html.dark-mode-manual .shortcut-item.add-btn .shortcut-icon {
+    filter: brightness(0) invert(1) opacity(0.7);
+}

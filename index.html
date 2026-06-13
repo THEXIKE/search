@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover">
+    <title>主页</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input">
+        <button class="search-btn" id="searchBtn">
+            <img src="assets/arrow-forward-outline.svg" alt="搜索" class="search-btn-img">
+        </button>
+        <ul class="suggestion-list" id="suggestionList"></ul>
+    </div>
+
+    <button class="show-modal" id="modalBtn">
+        <img src="assets/settings-outline.svg" alt="设置" class="modal-btn-img">
+    </button>
+
+    <div class="buttom-sheet" id="bottomSheet">
+        <div class="sheet-overlay"></div>
+        <div class="content">
+            <div class="header">
+                <div class="drag-icon"><span></span></div>
+            </div>
+            <div class="body">
+
+    <!-- 第一项：搜索引擎 -->
+    <h3 class="setting-title outside-title">搜索引擎</h3>
+    <div class="setting-section no-padding">
+        <div class="options-list" id="engineOptions">
+            <div class="option-item" data-engine="bing">
+                <span class="option-label">必应</span><span class="option-radio"></span>
+            </div>
+            <div class="option-divider"></div>
+            <div class="option-item" data-engine="google">
+                <span class="option-label">谷歌</span><span class="option-radio"></span>
+            </div>
+            <div class="option-divider"></div>
+            <div class="option-item" data-engine="baidu">
+                <span class="option-label">百度</span><span class="option-radio"></span>
+            </div>
+            <div class="option-divider"></div>
+            <div class="option-item" data-engine="custom">
+                <span class="option-label">自定义</span><span class="option-radio"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二项：深色模式 -->
+    <h3 class="setting-title outside-title">深色模式</h3>
+    <div class="setting-section no-padding" id="darkModeSection">
+        <div class="options-list" id="darkModeOptions">
+            <div class="option-item" data-mode="system">
+                <span class="option-label">系统默认</span><span class="option-radio"></span>
+            </div>
+            <div class="option-divider"></div>
+            <div class="option-item" data-mode="timed" id="timedOption">
+                <span class="option-label">定时开启</span><span class="option-radio"></span>
+            </div>
+            <div class="time-picker-wrapper" id="timePicker">
+                <div class="time-item">
+                    <div class="time-display" id="startTimeDisplay">18:30</div>
+                    <input type="time" id="startTime" value="18:30">
+                </div>
+                <div class="time-divider"></div>
+                <div class="time-item">
+                    <div class="time-display" id="endTimeDisplay">08:00</div>
+                    <input type="time" id="endTime" value="08:00">
+                </div>
+            </div>
+            <div class="option-divider"></div>
+            <div class="option-item" data-mode="permanent">
+                <span class="option-label">全天开启</span><span class="option-radio"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三项：搜索框 -->
+    <h3 class="setting-title outside-title">搜索框</h3>
+    <div class="setting-section">
+        <div class="toggle-row">
+            <span class="toggle-label">保留输入内容</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="keepInputToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </div>
+    <p class="outside-hint">使搜索框内容不再轻易被清除</p>
+
+    <!-- 第四项：启用搜索按钮 -->
+    <div class="setting-section" id="searchBtnSection">
+        <div class="toggle-row">
+            <span class="toggle-label">启用搜索按钮</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="enableSearchBtnToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </div>
+    <p class="outside-hint">搜索框有内容且失去焦点时显示搜索按钮</p>
+
+    <!-- 第五项：启用搜索建议 -->
+    <div class="setting-section" id="searchSuggestionSection">
+        <div class="toggle-row">
+            <span class="toggle-label">启用搜索建议</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="enableSuggestionToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </div>
+    <p class="outside-hint">输入时显示搜索建议</p>
+
+    <!-- 停用位移效果 -->
+     <div class="setting-section" id="disableMoveEffectSection">
+        <div class="toggle-row">
+            <span class="toggle-label">停用位移效果</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="disableMoveEffectToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </div>
+    <p class="outside-hint">停用搜索框下移动画效果</p>
+
+    <!-- 第六项：快速便签（连体方案） -->
+    <h3 class="outside-title" id="shortcutTitle">快速便签</h3>
+
+    <div class="setting-section no-padding">
+        <div class="toggle-row" style="padding: 14px 12px;">
+            <span class="toggle-label">启用快速便签</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="enableShortcutToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <!-- 连体动画容器，内含四个子开关 -->
+        <div class="shortcut-extra-wrapper" id="shortcutExtraWrapper">
+            <div class="option-divider"></div>
+            <div class="toggle-row" style="padding: 14px 12px;">
+                <span class="toggle-label">图标填充便签</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="iconFillToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="option-divider"></div>
+            <div class="toggle-row" style="padding: 14px 12px;">
+                <span class="toggle-label">显示便签标签</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="showShortcutTextToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="option-divider"></div>
+            <div class="toggle-row" style="padding: 14px 12px;">
+                <span class="toggle-label">下移便签区域</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="shiftDownToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="option-divider"></div>
+            <div class="toggle-row" style="padding: 14px 12px;">
+                <span class="toggle-label">隐藏添加按钮</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="hideAddBtnToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <p class="outside-hint">芝士快速便签的压缩饼干</p>
+    <!-- 个性化 -->
+     <h3 class="outside-title" id="personalizeTitle">个性化</h3>
+     <div class="setting-section" id="wallpaperSection">
+        <div class="toggle-row" id="wallpaperRow">
+            <span class="toggle-label">选择背景壁纸</span>
+            <span class="wallpaper-icons">
+                <img src="assets/chevron-forward-outline.svg" alt=">" class="wallpaper-arrow" id="wallpaperArrow">
+                <span class="wallpaper-divider" id="wallpaperDivider"></span>
+                <img src="assets/trash-outline.svg" alt="删除" class="wallpaper-delete" id="wallpaperDelete" style="display: none;">
+            </span>
+        </div>
+     </div>
+     <p class="outside-hint">背景壁纸的效果由浏览器特性决定</p>
+    <!-- 其他 -->
+     <h3 class="outside-title" id="otherTitle">其他</h3>
+     <div class="setting-section" id="customEngineSection">
+        <div class="toggle-row">
+            <span class="toggle-label">自定搜索引擎</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="enableCustomEngineToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+     </div>
+     <p class="outside-hint">在搜索引擎选项栏追加自定义选项</p>
+     <!-- 隐藏设置按钮 -->
+     <div class="setting-section" id="hideSettingsBtnSection">
+        <div class="toggle-row">
+            <span class="toggle-label">隐藏设置按钮</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="hideSettingsBtnToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+     </div>
+     <p class="outside-hint">隐藏主页的设置按钮但保留其功能</p>
+    <!-- 删除所有缓存按钮 -->
+    <div style="text-align: center; padding: 12px;">
+        <button id="clearAllCacheBtn">删除数据</button>
+    </div>
+
+</div>
+        </div>
+    </div>
+
+    <div class="shortcut-area" id="shortcutArea">
+        <div class="shortcut-grid" id="shortcutGrid"></div>
+    </div>
+
+    <!-- 添加快速便签弹窗 -->
+    <div class="buttom-sheet shortcut-sheet" id="shortcutSheet">
+        <div class="sheet-overlay"></div>
+        <div class="content">
+            <div class="header">
+                <span class="shortcut-sheet-title">添加快速便签</span>
+                <div class="shortcut-close" id="shortcutClose">
+                    <img src="assets/close-outline.svg" alt="关闭">
+                </div>
+                <div class="drag-icon" style="visibility:hidden;"><span></span></div>
+            </div>
+            <div class="body" id="shortcutSheetBody">
+                <div class="shortcut-icon-picker">
+                    <div class="shortcut-icon-btn" id="shortcutIconBtn">
+                        <img src="assets/image-outline.svg" id="shortcutIconPreview" alt="选择图标">
+                    </div>
+                    <input type="file" id="shortcutIconFile" accept="image/*" style="display:none;">
+                </div>
+                <input type="text" id="shortcutNameInput" placeholder="名称">
+                <input type="text" id="shortcutUrlInput" placeholder="网址">
+                <button id="shortcutAddConfirm">添加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑快速便签弹窗 -->
+    <div class="buttom-sheet shortcut-sheet edit-sheet" id="editSheet">
+        <div class="sheet-overlay"></div>
+        <div class="content">
+            <div class="header">
+                <span class="shortcut-sheet-title">编辑快速便签</span>
+                <div class="shortcut-close" id="editClose">
+                    <img src="assets/trash-outline.svg" alt="删除">
+                </div>
+                <div class="drag-icon" style="visibility:hidden;"><span></span></div>
+            </div>
+            <div class="body" id="editSheetBody">
+                <div class="shortcut-icon-picker">
+                    <div class="shortcut-icon-btn" id="editIconBtn">
+                        <img src="assets/image-outline.svg" id="editIconPreview" alt="选择图标">
+                    </div>
+                    <input type="file" id="editIconFile" accept="image/*" style="display:none;">
+                </div>
+                <input type="text" id="editNameInput" placeholder="名称">
+                <input type="text" id="editUrlInput" placeholder="网址">
+                <button id="editSaveConfirm">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义搜索引擎弹窗（结构与添加页相同，无图标选择器） -->
+    <div class="buttom-sheet shortcut-sheet" id="customSearchSheet">
+        <div class="sheet-overlay"></div>
+        <div class="content">
+            <div class="header">
+                <span class="shortcut-sheet-title">自定义搜索引擎</span>
+                <div class="shortcut-close" id="customSearchClose">
+                    <img src="assets/close-outline.svg" alt="关闭">
+                </div>
+                <div class="drag-icon" style="visibility:hidden;"><span></span></div>
+            </div>
+            <div class="body" id="customSearchBody">
+                <p class="custom-search-hint">
+                    自定搜索引擎需要名称和网址同时存在才生效<br>
+                    示例网址格式:<br>
+                    Yahoo: https://search.yahoo.com/search?p=<br>
+                    Yandex: https://yandex.com/search/?text=<br>
+                    DuckDuckGo: https://duckduckgo.com/?q=<br>
+                    设定完后如需更改可长按再次进入此页面修改
+                </p>
+                <input type="text" id="customNameInput" placeholder="名称">
+                <input type="text" id="customUrlInput" placeholder="网址">
+                <button id="customSearchConfirm">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认弹窗（含图标、文本、确认按钮，无标题，无关闭按钮） -->
+    <div class="buttom-sheet shortcut-sheet" id="clearConfirmSheet">
+        <div class="sheet-overlay" id="clearConfirmOverlay"></div>
+        <div class="content">
+            <div class="body" style="text-align: center; padding-top: 36px;">
+                <img src="assets/warning-outline.svg" alt="警告" style="width: 64px; height: 74px; margin-top: 32px; margin-bottom: 32px; filter: brightness(0) saturate(100%) invert(16%) sepia(100%) saturate(7444%) hue-rotate(1deg) brightness(96%) contrast(114%);">
+                <p id="clearConfirmText" style="font-size: 1rem; color: #000000; margin: 0 0 32px 0; padding: 0 0px; line-height: 1.5;">
+                    确认操作将会删除此页面的所有设定和数据
+                </p>
+                <button id="clearConfirmBtn">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
