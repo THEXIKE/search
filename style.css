@@ -544,7 +544,8 @@ input:checked + .toggle-slider::before {
 }
 .suggestion-list li:active {
     transform: scale(0.96);
-    background: rgba(241, 241, 241, 0.8);
+    background: rgba(180, 180, 180, 0.3);
+    backdrop-filter: blur(20px) brightness(1.1) saturate(1.8);
 }
 .suggestion-list li span {
     overflow: hidden;
@@ -664,7 +665,7 @@ input:checked + .toggle-slider::before {
         background: rgba(105, 105, 105, 0.3);
     }
     .suggestion-list li:active {
-        background: rgba(24, 24, 24, 0.8);
+        background: rgba(200, 200, 200, 0.3);
     }
     .suggestion-list li b {
         color: #4a6ae6;
@@ -815,7 +816,7 @@ html.dark-mode-manual .suggestion-list li {
     background: rgba(105, 105, 105, 0.3);
 }
 html.dark-mode-manual .suggestion-list li:active {
-    background: rgba(24, 24, 24, 0.8);
+    background: rgba(200, 200, 200, 0.3);
 }
 html.dark-mode-manual .suggestion-list li b {
     color: #ffffff;
